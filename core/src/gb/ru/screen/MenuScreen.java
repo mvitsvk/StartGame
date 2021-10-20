@@ -8,9 +8,11 @@ import gb.ru.base.BaseScreen;
 
 public class MenuScreen extends BaseScreen {
 
-    private Texture img;
-    private Vector2 touch;
-    private Vector2 v;
+    public Texture img;
+    public Vector2 touch;
+    public Vector2 v;
+    public Vector2 mouseKey;
+    public Vector2 length_res;
 
     @Override
     public void show() {
@@ -18,15 +20,19 @@ public class MenuScreen extends BaseScreen {
         img = new Texture("badlogic.jpg");
         touch = new Vector2();
         v = new Vector2(1, 1);
+        mouseKey = new Vector2(0, 0);
+        length_res = new Vector2(0, 0);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+
         batch.begin();
         batch.draw(img, touch.x, touch.y);
         batch.end();
-        touch.add(v);
+        //touch.add(v);
+        update();
     }
 
     @Override
@@ -37,8 +43,24 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        touch.set(screenX, Gdx.graphics.getHeight() - screenY);
+        mouseKey.set(screenX, Gdx.graphics.getHeight() - screenY);
         return super.touchDown(screenX, screenY, pointer, button);
+    }
+
+    public void update(){
+        if ((mouseKey.x > touch.x) & (mouseKey.y == touch.y)) v.set (1,0);
+        if ((mouseKey.x > touch.x) & (mouseKey.y > touch.y)) v.set (1,1);
+        if ((mouseKey.x > touch.x) & (mouseKey.y < touch.y)) v.set (1,-1);
+
+        if ((mouseKey.x == touch.x) & (mouseKey.y == touch.y)) v.set (0,0);
+        if ((mouseKey.x == touch.x) & (mouseKey.y > touch.y)) v.set (0,1);
+        if ((mouseKey.x == touch.x) & (mouseKey.y < touch.y)) v.set (0,-1);
+
+        if ((mouseKey.x < touch.x) & (mouseKey.y == touch.y)) v.set (-1,0);
+        if ((mouseKey.x < touch.x) & (mouseKey.y > touch.y)) v.set (-1,1);
+        if ((mouseKey.x < touch.x) & (mouseKey.y < touch.y)) v.set (-1,-1);
+
+        touch.add(v);
     }
 
 }
